@@ -5,40 +5,48 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.badmitry.pictureoftheday.mvvm.model.entity.NasaRequest
 import com.badmitry.pictureoftheday.mvvm.model.repo.INasaRepo
-import com.badmitry.pictureoftheday.ui.App
+import com.badmitry.pictureoftheday.mvvm.model.spsettings.ISPSettingsRepo
 import io.reactivex.rxjava3.core.Scheduler
+import io.reactivex.rxjava3.disposables.CompositeDisposable
+import io.reactivex.rxjava3.kotlin.addTo
 import java.text.SimpleDateFormat
 import java.util.*
-import javax.inject.Inject
 
-class MainViewModel : ViewModel() {
-    @Inject
-    lateinit var nasaRepo: INasaRepo
+class MainViewModel(private val nasaRepo: INasaRepo, private val uiSchedulers: Scheduler, private val spRepo: ISPSettingsRepo) :
+    ViewModel() {
 
-    @Inject
-    lateinit var uiSchedulers: Scheduler
+    var theme = downloadTheme()
 
+    private val compositeDisposable = CompositeDisposable()
     private val nasaRequestLiveData = MutableLiveData<NasaRequest>()
     fun getNasaRequestLiveData() = nasaRequestLiveData
-    private val startWikipedia = MutableLiveData<Unit>()
-    fun getStartWikiLiveData() = startWikipedia
-
-    fun initDagger() {
-        App.component.inject(this)
-    }
+    private val startWikipediaLiveData = MutableLiveData<Unit>()
+    fun getStartWikiLiveData() = startWikipediaLiveData
 
     @SuppressLint("SimpleDateFormat")
     fun getNasaRequest(apiKey: String) {
         val currentTime = Calendar.getInstance().time
         val df = SimpleDateFormat("yyyy-MM-dd")
-        nasaRepo.downloadNasaRequest(df.format(currentTime), apiKey).observeOn(uiSchedulers).subscribe({request ->
-            nasaRequestLiveData.value = request
-        },{
-            println("Error: ${it.message}")
-        })
+        nasaRepo.downloadNasaRequest(df.format(currentTime), apiKey).observeOn(uiSchedulers)
+            .subscribe({ request ->
+                nasaRequestLiveData.value = request
+            }, {
+                println("Error: ${it.message}")
+            }).addTo(compositeDisposable)
     }
 
     fun startWiki() {
-        startWikipedia.value = Unit
+        startWikipediaLiveData.value = Unit
     }
+
+    fun stop() {
+        compositeDisposable.dispose()
+    }
+
+    fun changeTheme(themeId: Int) {
+        spRepo.saveTheme(themeId)
+        theme = downloadTheme()
+    }
+
+    fun downloadTheme(): Int = spRepo.getTheme()
 }

@@ -1,12 +1,12 @@
 package com.badmitry.pictureoftheday.ui.activities
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import coil.api.load
@@ -24,8 +24,9 @@ class MainActivity : AppCompatActivity() {
     lateinit var viewModel: MainViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
         App.component.inject(this)
+        setTheme(viewModel.theme)
+        super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.main_layout)
         setBottomAppBar()
         viewModel.getNasaRequestLiveData().observe(this, { value ->
@@ -43,7 +44,6 @@ class MainActivity : AppCompatActivity() {
                     Uri.parse("https://en.wikipedia.org/wiki/${binding?.inputEditText?.text.toString()}")
             })
         })
-        viewModel.initDagger()
         viewModel.getNasaRequest(BuildConfig.NASA_API_KEY)
         binding?.let {
             it.inputLayout.setEndIconOnClickListener {
@@ -57,8 +57,14 @@ class MainActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.app_bar_fav -> Toast.makeText(this, "Favourite", Toast.LENGTH_SHORT).show()
-            R.id.app_bar_search -> Toast.makeText(this, "Search", Toast.LENGTH_SHORT).show()
+            R.id.app_theme -> {
+                viewModel.changeTheme(R.style.AppTheme)
+                    recreate()
+            }
+            R.id.mars_theme -> {
+                viewModel.changeTheme(R.style.MarsTheme)
+                    recreate()
+            }
         }
         return super.onOptionsItemSelected(item)
     }
@@ -67,7 +73,10 @@ class MainActivity : AppCompatActivity() {
         binding?.let {
             setSupportActionBar(it.bottomAppBar)
         }
-//        setHasOptionsMenu(true)
     }
 
+    override fun onStop() {
+        viewModel.stop()
+        super.onStop()
+    }
 }
