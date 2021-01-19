@@ -1,21 +1,22 @@
 package com.badmitry.pictureoftheday.ui.activities
 
-import android.annotation.SuppressLint
-import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
-import coil.api.load
-import com.badmitry.pictureoftheday.BuildConfig
 import com.badmitry.pictureoftheday.R
 import com.badmitry.pictureoftheday.databinding.MainLayoutBinding
 import com.badmitry.pictureoftheday.mvvm.vm.MainViewModel
 import com.badmitry.pictureoftheday.ui.App
+import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
+import ru.terrakok.cicerone.NavigatorHolder
+import ru.terrakok.cicerone.android.support.SupportAppNavigator
 import javax.inject.Inject
+
 
 class MainActivity : AppCompatActivity() {
     private var binding: MainLayoutBinding? = null
@@ -23,33 +24,31 @@ class MainActivity : AppCompatActivity() {
     @Inject
     lateinit var viewModel: MainViewModel
 
+    @Inject
+    lateinit var navigatorHolder: NavigatorHolder
+
     override fun onCreate(savedInstanceState: Bundle?) {
         App.component.inject(this)
         setTheme(viewModel.theme)
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.main_layout)
         setBottomAppBar()
-        viewModel.getNasaRequestLiveData().observe(this, { value ->
-            binding?.let {
-                if (value.mediaType == "image") {
-                    binding?.imageView?.load(value.hdurl)
-                } else {
-                    binding?.imageView?.load(value.thumbnail_url)
-                }
-            }
-        })
-        viewModel.getStartWikiLiveData().observe(this, {
-            startActivity(Intent(Intent.ACTION_VIEW).apply {
-                data =
-                    Uri.parse("https://en.wikipedia.org/wiki/${binding?.inputEditText?.text.toString()}")
-            })
-        })
-        viewModel.getNasaRequest(BuildConfig.NASA_API_KEY)
         binding?.let {
-            it.inputLayout.setEndIconOnClickListener {
-                viewModel.startWiki()
-            }
+            it.tabLayout.addTab(it.tabLayout.newTab().setText("Текущая дата").setIcon(R.drawable.ic_baseline_image_search_24))
+            it.tabLayout.addTab(it.tabLayout.newTab().setText("Вчерашняя дата").setIcon(R.drawable.ic_baseline_image_search_24))
+            it.tabLayout.addOnTabSelectedListener(object : OnTabSelectedListener {
+                override fun onTabSelected(tab: TabLayout.Tab) {
+                    if (it.tabLayout.getSelectedTabPosition() == 0) {
+                        viewModel.navigateTo(it.tabLayout.selectedTabPosition)
+                    } else {
+                        viewModel.navigateTo(it.tabLayout.selectedTabPosition)
+                    }
+                }
+                override fun onTabUnselected(tab: TabLayout.Tab?) {}
+                override fun onTabReselected(tab: TabLayout.Tab?) {}
+            })
         }
+        viewModel.navigateTo(0)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean =
@@ -59,11 +58,11 @@ class MainActivity : AppCompatActivity() {
         when (item.itemId) {
             R.id.app_theme -> {
                 viewModel.changeTheme(R.style.AppTheme)
-                    recreate()
+                recreate()
             }
             R.id.mars_theme -> {
                 viewModel.changeTheme(R.style.MarsTheme)
-                    recreate()
+                recreate()
             }
         }
         return super.onOptionsItemSelected(item)
@@ -75,8 +74,18 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    override fun onStop() {
-        viewModel.stop()
-        super.onStop()
+    override fun onBackPressed() {
+        this.finish()
+    }
+
+    override fun onResumeFragments() {
+        super.onResumeFragments()
+        val navigator = SupportAppNavigator(this, supportFragmentManager, R.id.container)
+        navigatorHolder.setNavigator(navigator)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        navigatorHolder.removeNavigator()
     }
 }
