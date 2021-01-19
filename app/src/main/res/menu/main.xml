@@ -3,14 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/app_bar_fav"
-        android:icon="@drawable/ic_favourite_menu"
-        android:title="@string/favourite"
+        android:id="@+id/app_theme"
+        android:title="@string/app_theme"
         app:showAsAction="ifRoom" />
 
     <item
-        android:id="@+id/app_bar_search"
-        android:icon="@drawable/ic_settings_menu"
-        android:title="@string/settings"
+        android:id="@+id/mars_theme"
+        android:title="@string/mars_theme"
         app:showAsAction="ifRoom" />
 </menu>

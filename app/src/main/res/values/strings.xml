@@ -5,4 +5,6 @@
     <string name="photo_of_the_day_stub">photo of the day</string>
     <string name="favourite">избранное</string>
     <string name="settings">настройки</string>
+    <string name="app_theme">AppTheme</string>
+    <string name="mars_theme">MarsTheme</string>
 </resources>

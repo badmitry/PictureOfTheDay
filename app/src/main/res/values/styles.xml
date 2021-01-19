@@ -7,4 +7,14 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="MarsTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <item name="fontFamily">@font/mars_font</item>
+        <item name="android:fontFamily">@font/mars_font</item>
+        <item name="android:textColorPrimary">#EC1111</item>
+        <item name="colorOnSurface">#A89A1B</item>
+        <item name="colorControlNormal">#A89A1B</item>
+        <item name="colorPrimaryDark">#A89A1B</item>
+        <item name="colorPrimary">@color/colorAccent</item>
+    </style>
+
 </resources>
