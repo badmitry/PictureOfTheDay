@@ -16,11 +16,9 @@ class ViewModulModule {
     @Singleton
     @Provides
     fun getMainViewModel(
-        nasaRepo: INasaRepo,
-        uiSchedulers: Scheduler,
         spSettingsRepo: ISPSettingsRepo,
         router: Router
-    ) = MainViewModel(nasaRepo, uiSchedulers, spSettingsRepo, router)
+    ) = MainViewModel(spSettingsRepo, router)
 
     @Provides
     fun getFragmentViewModel(

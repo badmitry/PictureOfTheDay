@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.badmitry.pictureoftheday.R
@@ -34,16 +33,19 @@ class MainActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.main_layout)
         setBottomAppBar()
         binding?.let {
-            it.tabLayout.addTab(it.tabLayout.newTab().setText("Текущая дата").setIcon(R.drawable.ic_baseline_image_search_24))
-            it.tabLayout.addTab(it.tabLayout.newTab().setText("Вчерашняя дата").setIcon(R.drawable.ic_baseline_image_search_24))
+            it.tabLayout.addTab(
+                it.tabLayout.newTab().setText(R.string.current_date)
+                    .setIcon(R.drawable.ic_baseline_image_search_24)
+            )
+            it.tabLayout.addTab(
+                it.tabLayout.newTab().setText(R.string.yesterday_date)
+                    .setIcon(R.drawable.ic_baseline_image_search_24)
+            )
             it.tabLayout.addOnTabSelectedListener(object : OnTabSelectedListener {
                 override fun onTabSelected(tab: TabLayout.Tab) {
-                    if (it.tabLayout.getSelectedTabPosition() == 0) {
-                        viewModel.navigateTo(it.tabLayout.selectedTabPosition)
-                    } else {
-                        viewModel.navigateTo(it.tabLayout.selectedTabPosition)
-                    }
+                    viewModel.navigateTo(it.tabLayout.selectedTabPosition)
                 }
+
                 override fun onTabUnselected(tab: TabLayout.Tab?) {}
                 override fun onTabReselected(tab: TabLayout.Tab?) {}
             })
