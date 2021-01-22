@@ -52,12 +52,13 @@ class BaseFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         activity?.let{
             viewModel.getNasaRequestLiveData().observe(it, { value ->
-                binding?.let {
+                binding?.let {bind ->
                     if (value.mediaType == "image") {
-                        binding?.imageView?.load(value.hdurl)
+                        bind.imageView.load(value.hdurl)
                     } else {
-                        binding?.imageView?.load(value.thumbnail_url)
+                        bind.imageView.load(value.thumbnail_url)
                     }
+                    bind.mLayout.transitionToEnd()
                 }
             })
             viewModel.getStartWikiLiveData().observe(it, {
