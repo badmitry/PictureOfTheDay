@@ -46,12 +46,8 @@
                 android:id="@+id/image_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
+                android:scaleType="fitCenter"
                 android:contentDescription="@string/photo_of_the_day_stub"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/ic_baseline_image_search_24" />
         </androidx.constraintlayout.motion.widget.MotionLayout>
 

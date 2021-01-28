@@ -6,7 +6,6 @@
         <Constraint android:id="@+id/image_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
             android:contentDescription="@string/photo_of_the_day_stub"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -19,8 +18,7 @@
     <ConstraintSet android:id="@+id/end">
         <Constraint android:id="@id/image_view"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
+            android:layout_height="match_parent"
             android:contentDescription="@string/photo_of_the_day_stub"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

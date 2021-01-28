@@ -3,9 +3,12 @@ package com.badmitry.pictureoftheday.ui.fragments
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.transition.ChangeImageTransform
+import android.transition.TransitionManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import coil.api.load
@@ -14,6 +17,7 @@ import com.badmitry.pictureoftheday.R
 import com.badmitry.pictureoftheday.databinding.FragmentLayoutBinding
 import com.badmitry.pictureoftheday.mvvm.vm.FragmentViewModel
 import com.badmitry.pictureoftheday.ui.App
+import kotlinx.android.synthetic.main.fragment_layout.*
 import javax.inject.Inject
 
 class BaseFragment : Fragment() {
@@ -39,7 +43,7 @@ class BaseFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         App.component.inject(this)
-        arguments?.let{
+        arguments?.let {
             fragmentNumber = it.getInt(DATE)
         }
         binding =
@@ -50,9 +54,9 @@ class BaseFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         viewModel.numberFragment = fragmentNumber
         super.onViewCreated(view, savedInstanceState)
-        activity?.let{
+        activity?.let {
             viewModel.getNasaRequestLiveData().observe(it, { value ->
-                binding?.let {bind ->
+                binding?.let { bind ->
                     if (value.mediaType == "image") {
                         bind.imageView.load(value.hdurl)
                     } else {
@@ -67,22 +71,38 @@ class BaseFragment : Fragment() {
                         Uri.parse("https://en.wikipedia.org/wiki/${binding?.inputEditText?.text.toString()}")
                 })
             })
+            viewModel.getStartAnimation().observe(it, {isExpanded ->
+                binding?.let {bind ->
+                    TransitionManager.beginDelayedTransition(
+                        m_layout, ChangeImageTransform().setDuration(1000)
+                    )
+                    bind.imageView.scaleType =
+                        if (isExpanded) ImageView.ScaleType.CENTER_CROP else ImageView.ScaleType.FIT_CENTER
+                    bind.imageView.animate()
+                        .rotation(if(isExpanded) 90F else 0F )
+                        .setDuration(1000)
+                        .start()
+                }
+            })
         }
         viewModel.getNasaRequest(BuildConfig.NASA_API_KEY)
-        binding?.let {
-            it.inputLayout.setEndIconOnClickListener {
+        binding?.let {bind ->
+            bind.inputLayout.setEndIconOnClickListener {
                 viewModel.startWiki()
             }
-        }
+            bind.imageView.setOnClickListener { view ->
+                viewModel.animate()
+            }
     }
+}
 
-    override fun onDestroy() {
-        super.onDestroy()
-        binding = null
-    }
+override fun onDestroy() {
+    super.onDestroy()
+    binding = null
+}
 
-    override fun onStop() {
-        viewModel.onCleared()
-        super.onStop()
-    }
+override fun onStop() {
+    viewModel.onCleared()
+    super.onStop()
+}
 }

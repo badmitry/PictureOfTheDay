@@ -21,6 +21,7 @@ class FragmentViewModel(
     ViewModel() {
 
     var numberFragment = 0
+    private var isExpanded = false
 
     var theme = downloadTheme()
 
@@ -29,6 +30,8 @@ class FragmentViewModel(
     fun getNasaRequestLiveData() = nasaRequestLiveData
     private val startWikipediaLiveData = MutableLiveData<Unit>()
     fun getStartWikiLiveData() = startWikipediaLiveData
+    private val startAnimation = MutableLiveData<Boolean>()
+    fun getStartAnimation() = startAnimation
 
     @SuppressLint("SimpleDateFormat")
     fun getNasaRequest(apiKey: String) {
@@ -60,4 +63,9 @@ class FragmentViewModel(
     }
 
     fun downloadTheme(): Int = spRepo.getTheme()
+
+    fun animate() {
+        isExpanded = !isExpanded
+        startAnimation.value = isExpanded
+    }
 }
