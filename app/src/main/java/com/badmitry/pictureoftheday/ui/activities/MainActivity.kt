@@ -73,6 +73,9 @@ class MainActivity : AppCompatActivity() {
     private fun setBottomAppBar() {
         binding?.let {
             setSupportActionBar(it.bottomAppBar)
+            it.fab.setOnClickListener{
+                viewModel.navigateToNote()
+            }
         }
     }
 

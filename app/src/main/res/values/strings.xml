@@ -9,4 +9,7 @@
     <string name="mars_theme">MarsTheme</string>
     <string name="current_date">Текущая дата</string>
     <string name="yesterday_date">Вчерашняя дата</string>
+    <string name="note">Заметка</string>
+    <string name="header">Заголовок</string>
+    <string name="new_note">Новая заметка</string>
 </resources>

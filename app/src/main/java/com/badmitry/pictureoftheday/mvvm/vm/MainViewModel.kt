@@ -23,4 +23,8 @@ class MainViewModel(
     fun navigateTo(numberOfFragment: Int) {
         router.replaceScreen(Screens.FragmentScreen(numberOfFragment))
     }
+
+    fun navigateToNote() {
+        router.navigateTo(Screens.NoteScreen())
+    }
 }
