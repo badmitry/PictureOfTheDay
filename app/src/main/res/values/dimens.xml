@@ -2,4 +2,5 @@
 <resources>
     <dimen name="header_text_size">30sp</dimen>
     <dimen name="text_size_note">15sp</dimen>
+    <dimen name="splash_image_size">100dp</dimen>
 </resources>

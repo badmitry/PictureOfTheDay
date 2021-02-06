@@ -6,6 +6,7 @@ import com.badmitry.pictureoftheday.mvvm.model.spsettings.ISPSettingsRepo
 import com.badmitry.pictureoftheday.mvvm.vm.FragmentViewModel
 import com.badmitry.pictureoftheday.mvvm.vm.MainViewModel
 import com.badmitry.pictureoftheday.mvvm.vm.NoteViewModel
+import com.badmitry.pictureoftheday.mvvm.vm.SplashViewModel
 import dagger.Module
 import dagger.Provides
 import io.reactivex.rxjava3.core.Scheduler
@@ -35,4 +36,9 @@ class ViewModulModule {
         cache: INoteCache,
         uiSchedulers: Scheduler
     ) = NoteViewModel(spSettingsRepo, cache, uiSchedulers)
+
+    @Provides
+    fun getSplashViewModel(
+        router: Router
+    ) = SplashViewModel(router)
 }

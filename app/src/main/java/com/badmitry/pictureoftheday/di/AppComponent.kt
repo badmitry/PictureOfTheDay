@@ -4,6 +4,7 @@ import com.badmitry.pictureoftheday.di.modules.*
 import com.badmitry.pictureoftheday.mvvm.vm.MainViewModel
 import com.badmitry.pictureoftheday.ui.activities.MainActivity
 import com.badmitry.pictureoftheday.ui.activities.NoteActivity
+import com.badmitry.pictureoftheday.ui.activities.SplashActivity
 import com.badmitry.pictureoftheday.ui.fragments.BaseFragment
 import dagger.Component
 import javax.inject.Singleton
@@ -24,4 +25,5 @@ interface AppComponent {
     fun inject(mainViewModel: MainViewModel)
     fun inject(baseFragment: BaseFragment)
     fun inject(noteActivity: NoteActivity)
+    fun inject(splashActivity: SplashActivity)
 }
